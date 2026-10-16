@@ -1,6 +1,6 @@
 # Python CSV & Excel Cleaner
 
-A lightweight Python command-line tool to clean CSV and Excel files by trimming whitespace, removing blank rows, and eliminating duplicate records. Supports single-file and batch processing.
+A lightweight Python command-line tool for cleaning CSV and Excel files. It supports single-file cleaning and batch processing.
 
 ## Features
 
@@ -8,16 +8,18 @@ A lightweight Python command-line tool to clean CSV and Excel files by trimming 
 - Trims leading and trailing whitespace
 - Removes completely blank rows
 - Removes duplicate records
-- Validates column headers and rejects duplicate header names
+- Validates column headers
+- Rejects empty or duplicate header names
 - Generates a cleaning summary for each file
 - Supports custom output paths
-- Processes multiple CSV and Excel files in one command
+- Processes multiple files in batch mode
 - Includes automated unit tests
+- Runs automated tests with GitHub Actions
 
 ## Requirements
 
 - Python 3
-- `openpyxl` for Excel file support
+- `openpyxl` for Excel support
 
 ## Installation
 
@@ -28,7 +30,7 @@ git clone https://github.com/naimhossain-tech/python-csv-cleaner.git
 cd python-csv-cleaner
 ```
 
-Install the required dependency:
+Install the dependency:
 
 ```bash
 python -m pip install openpyxl
@@ -42,9 +44,7 @@ python -m pip install openpyxl
 python clean_csv.py input.csv
 ```
 
-By default, the output is saved as `cleaned_output.csv`.
-
-Specify an output file:
+Specify a custom output file:
 
 ```bash
 python clean_csv.py input.csv -o cleaned.csv
@@ -56,7 +56,7 @@ python clean_csv.py input.csv -o cleaned.csv
 python clean_csv.py input.xlsx
 ```
 
-Specify an output file:
+Specify a custom output file:
 
 ```bash
 python clean_csv.py input.xlsx -o cleaned.xlsx
@@ -64,13 +64,13 @@ python clean_csv.py input.xlsx -o cleaned.xlsx
 
 ### Batch processing
 
-Place your CSV and XLSX files in a folder, then run:
+Place CSV and XLSX files directly inside a folder:
 
 ```bash
 python batch_clean.py batch_demo
 ```
 
-By default, cleaned files are saved in `batch_cleaned_output/` with the prefix `cleaned_`.
+By default, cleaned files are saved in `batch_cleaned_output/`.
 
 Choose a custom output directory:
 
@@ -80,14 +80,14 @@ python batch_clean.py batch_demo -o results
 
 Batch processing checks files directly inside the specified folder, not its subfolders.
 
-### View help
+### View command help
 
 ```bash
 python clean_csv.py --help
 python batch_clean.py --help
 ```
 
-## Example report
+## Example cleaning report
 
 ```text
 FILE CLEANING REPORT
@@ -100,25 +100,38 @@ Rows kept:             2
 Removal rate:          50.00%
 ```
 
-The example is illustrative. Actual results depend on the input data.
+This is an illustrative example. Actual results depend on the input data.
 
-## Run tests
+## Run automated tests
 
-Run the automated tests with:
+Compile the Python files:
 
 ```bash
-python -m py_compile clean_csv.py batch_clean.py
-python -m unittest -v test_clean_csv
+python -m py_compile clean_csv.py batch_clean.py test_clean_csv.py test_batch_clean.py
 ```
+
+Run all tests:
+
+```bash
+python -m unittest -v test_clean_csv test_batch_clean
+```
+
+## GitHub Actions
+
+GitHub Actions automatically runs the configured tests when code is pushed to the `main` branch or a pull request targets `main`.
+
+View workflow runs:
+
+https://github.com/naimhossain-tech/python-csv-cleaner/actions
 
 ## Important notes
 
-- Always keep a backup of important source data.
+- Keep a backup of important source data.
 - Review cleaned output before using it in production.
 - Duplicate records are identified by comparing their cleaned cell values.
-- CSV and Excel files are processed using the first worksheet or active worksheet, respectively, for Excel input.
-- The cleaner is intended for data cleanup, not for verifying the accuracy of the data.
-- No formal open-source license has been added. Contact the repository owner for licensing and reuse permission.
+- Excel processing uses the applicable worksheet selected by the program.
+- This tool cleans data; it does not verify the accuracy of the underlying information.
+- No open-source license has been added. Contact the repository owner for licensing and reuse permission.
 
 ## Repository
 
