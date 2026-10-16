@@ -11,3 +11,5 @@ excel_demo.xlsx
 cleaned_output.xlsx
 clean_csv.py.excel_backup
 clean_csv.py.report_backup
+batch_demo/
+batch_cleaned_output/
