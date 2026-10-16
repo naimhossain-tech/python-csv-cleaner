@@ -3,21 +3,119 @@ import csv
 import sys
 from pathlib import Path
 
+import openpyxl
+
+
+def clean_value(value):
+    return value.strip() if isinstance(value, str) else value
+
+
+def validate_headers(raw_headers):
+    if not raw_headers or all(value is None or str(value).strip() == "" for value in raw_headers):
+        raise ValueError("Header row is missing.")
+
+    headers = [str(value).strip() if value is not None else "" for value in raw_headers]
+
+    if any(not header for header in headers):
+        raise ValueError("Empty column names are not allowed.")
+
+    if len(set(headers)) != len(headers):
+        raise ValueError("Duplicate column names after trimming.")
+
+    return headers
+
+
+def clean_csv(source):
+    with source.open("r", newline="", encoding="utf-8-sig") as file:
+        reader = csv.reader(file)
+        raw_headers = next(reader, None)
+        headers = validate_headers(raw_headers)
+        rows = []
+        seen = set()
+        total = 0
+        blank_removed = 0
+        duplicate_removed = 0
+
+        for values in reader:
+            total += 1
+            if len(values) > len(headers):
+                raise ValueError(f"Too many values on CSV line {reader.line_num}.")
+            values += [""] * (len(headers) - len(values))
+            cleaned = [value.strip() for value in values]
+
+            if all(value == "" for value in cleaned):
+                blank_removed += 1
+                continue
+
+            key = tuple(cleaned)
+            if key in seen:
+                duplicate_removed += 1
+                continue
+
+            seen.add(key)
+            rows.append(cleaned)
+
+    return headers, rows, total, blank_removed, duplicate_removed
+
+
+def clean_excel(source):
+    workbook = openpyxl.load_workbook(source, read_only=True, data_only=False)
+    try:
+        sheet = workbook.active
+        iterator = sheet.iter_rows(values_only=True)
+        raw_headers = next(iterator, None)
+        headers = validate_headers(raw_headers)
+        rows = []
+        seen = set()
+        total = 0
+        blank_removed = 0
+        duplicate_removed = 0
+
+        for values in iterator:
+            total += 1
+            cleaned = [clean_value(value) for value in values[:len(headers)]]
+            cleaned += [None] * (len(headers) - len(cleaned))
+
+            if all(value is None or value == "" for value in cleaned):
+                blank_removed += 1
+                continue
+
+            key = tuple(cleaned)
+            if key in seen:
+                duplicate_removed += 1
+                continue
+
+            seen.add(key)
+            rows.append(cleaned)
+
+        return headers, rows, total, blank_removed, duplicate_removed
+    finally:
+        workbook.close()
+
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Clean CSV files and remove blank or duplicate rows."
+        description="Clean CSV or Excel files and remove blank or duplicate rows."
     )
-    parser.add_argument("input", help="Path to the input CSV file")
+    parser.add_argument("input", help="Path to an input .csv or .xlsx file")
     parser.add_argument(
         "-o", "--output",
-        default="cleaned_output.csv",
-        help="Output CSV path (default: cleaned_output.csv)"
+        help="Output file path (default: cleaned_output with the input extension)"
     )
     args = parser.parse_args()
 
     source = Path(args.input)
-    output = Path(args.output)
+    extension = source.suffix.lower()
+
+    if extension not in (".csv", ".xlsx"):
+        print("Error: Input must be a .csv or .xlsx file.")
+        return 1
+
+    output = Path(args.output) if args.output else Path(f"cleaned_output{extension}")
+
+    if output.suffix.lower() != extension:
+        print(f"Error: Output file must also use the {extension} extension.")
+        return 1
 
     if not source.is_file():
         print(f"Error: Input file not found: {source}")
@@ -28,80 +126,33 @@ def main():
             print("Error: Input and output files must be different.")
             return 1
 
-        with source.open(
-            "r", newline="", encoding="utf-8-sig"
-        ) as file:
-            reader = csv.DictReader(file)
-
-            if not reader.fieldnames:
-                print("Error: CSV header is missing.")
-                return 1
-
-            headers = [h.strip() for h in reader.fieldnames]
-
-            if any(not h for h in headers):
-                print("Error: Empty column names are not allowed.")
-                return 1
-
-            if len(set(headers)) != len(headers):
-                print("Error: Duplicate column names after trimming.")
-                return 1
-
-            rows = []
-            seen = set()
-            total = 0
-            blank_removed = 0
-            duplicate_removed = 0
-
-            for row in reader:
-                total += 1
-
-                if None in row:
-                    print(
-                        f"Error: Too many values on CSV line "
-                        f"{reader.line_num}."
-                    )
-                    return 1
-
-                cleaned = {
-                    header: (
-                        (row.get(original) or "").strip()
-                    )
-                    for original, header in zip(
-                        reader.fieldnames, headers
-                    )
-                }
-
-                if all(value == "" for value in cleaned.values()):
-                    blank_removed += 1
-                    continue
-
-                key = tuple(cleaned[h] for h in headers)
-
-                if key in seen:
-                    duplicate_removed += 1
-                    continue
-
-                seen.add(key)
-                rows.append(cleaned)
+        if extension == ".csv":
+            headers, rows, total, blank_removed, duplicate_removed = clean_csv(source)
+        else:
+            headers, rows, total, blank_removed, duplicate_removed = clean_excel(source)
 
         output.parent.mkdir(parents=True, exist_ok=True)
 
-        with output.open(
-            "w", newline="", encoding="utf-8"
-        ) as file:
-            writer = csv.DictWriter(
-                file, fieldnames=headers
-            )
-            writer.writeheader()
-            writer.writerows(rows)
+        if extension == ".csv":
+            with output.open("w", newline="", encoding="utf-8") as file:
+                writer = csv.writer(file)
+                writer.writerow(headers)
+                writer.writerows(rows)
+        else:
+            workbook = openpyxl.Workbook()
+            sheet = workbook.active
+            sheet.append(headers)
+            for row in rows:
+                sheet.append(row)
+            workbook.save(output)
+            workbook.close()
 
         removed = blank_removed + duplicate_removed
         kept = len(rows)
         removal_rate = (removed / total * 100) if total else 0.0
 
         print("\n" + "=" * 36)
-        print("         CSV CLEANING REPORT")
+        print("         FILE CLEANING REPORT")
         print("=" * 36)
         print("Status:                SUCCESS")
         print(f"Input file:            {source}")
@@ -116,7 +167,7 @@ def main():
         print("=" * 36)
         return 0
 
-    except (OSError, UnicodeError, csv.Error) as error:
+    except (OSError, UnicodeError, csv.Error, ValueError, openpyxl.utils.exceptions.InvalidFileException) as error:
         print(f"Error: {error}")
         return 1
 
