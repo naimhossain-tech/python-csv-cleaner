@@ -1,82 +1,71 @@
-# Python CSV Cleaner
+Python CSV Cleaner
 
-A lightweight Python tool to clean CSV files by trimming whitespace,
-removing blank rows, and removing duplicate records.
+A lightweight Python command-line tool to clean CSV files by trimming whitespace, removing blank rows, and removing duplicate records.
 
-## Features
+Features
 
 - Trims whitespace from column names and cell values
 - Removes completely blank rows
 - Removes duplicate records
-- Reports rows processed, removed, and kept
-- Supports custom output paths
-- Handles common file and CSV errors
-- Uses Python's built-in libraries
+- Reports rows read, removed, and kept
+- Supports custom output file paths
+- Handles common CSV and file errors
+- Uses Python's built-in libraries only
 
-## Requirements
+Requirements
 
 - Python 3.8 or newer
 - No third-party packages required
 
-## Usage
+Usage
 
 Clean a CSV file:
 
-```bash
 python clean_csv.py input.csv
-python clean_csv.py input.csv -o output/cleaned.csv
+
+Save the cleaned file to a specific location:
+
+python clean_csv.py input.csv -o output.csv
+
+View available options:
+
 python clean_csv.py --help
+
+Demo: Before and After
+
+Run the example:
+
+python clean_csv.py portfolio_demo.csv -o portfolio_demo_cleaned.csv
+
+Cleaning Report
+
 CSV Cleaning Report
 -------------------
-Rows read:             4
+Rows read:             5
 Blank rows removed:    1
-Duplicate rows removed:    1
-Rows kept:             2
-Output saved to:       demo_cleaned.csv
+Duplicate rows removed: 1
+Rows kept:              3
+Output saved to:       portfolio_demo_cleaned.csv
 
-## ধাপ ২: ব্যক্তিগত ও অপ্রয়োজনীয় ফাইল সুরক্ষিত রাখুন
+Cleaned Output
 
-একটি `.gitignore` তৈরি করুন:
-
-```bash
-cat > .gitignore <<'EOF'
-.venv/
-__pycache__/
-*.pyc
-*.backup
-input.csv
-cleaned_output.csv
-demo.csv
-demo_cleaned.csv
-## Demo: Before and After
-
-This example demonstrates how the CSV Cleaner removes extra whitespace, blank rows, and duplicate records.
-
-### Sample Command
-
-```bash
-python clean_csv.py portfolio_demo.csv -o portfolio_demo_cleaned.csv
-```
-
-### Cleaning Results
-
-- Rows read: 5
-- Blank rows removed: 1
-- Duplicate rows removed: 1
-- Rows kept: 3
-
-### Cleaned Output
-
-```csv
 name,email,city
 Rahim,rahim@example.com,Dhaka
 Karim,karim@example.com,Chattogram
 Nusrat,nusrat@example.com,Sylhet
-```
 
-### Features Demonstrated
+How It Works
 
-- Trims whitespace from values
-- Removes completely blank rows
-- Removes duplicate records
-- Saves cleaned data to a separate CSV file
+1. Reads the input CSV file.
+2. Trims unnecessary whitespace.
+3. Removes completely blank rows.
+4. Removes duplicate records.
+5. Saves the cleaned data to an output file.
+
+Safety
+
+Always review the cleaned output before using it for important work. Keep a backup of your original data.
+
+License
+
+This project is available for learning and practical CSV-cleaning tasks.
