@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>DataClean | CSV & Excel Cleaner</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f3f6fb;
+      color: #182235;
+      line-height: 1.6;
+    }
+    header {
+      background: #101827;
+      color: white;
+      padding: 19px 20px;
+    }
+    .nav, main, footer { max-width: 900px; margin: auto; }
+    .nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .brand { font-size: 19px; font-weight: 800; }
+    .brand span { color: #60e3b1; }
+    .tag { color: #c7d2e3; font-size: 12px; }
+    main { padding: 42px 16px; }
+    .hero { text-align: center; margin-bottom: 28px; }
+    .pill {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 30px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    h1 { font-size: clamp(29px, 6vw, 44px); line-height: 1.15; margin: 15px 0; }
+    .hero p { color: #657187; max-width: 570px; margin: auto; }
+    .panel {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: clamp(18px, 4vw, 30px);
+      box-shadow: 0 12px 35px #1822350b;
+      margin-bottom: 22px;
+    }
+    .upload {
+      display: block;
+      text-align: center;
+      border: 2px dashed #b8c7db;
+      background: #f8fbff;
+      border-radius: 14px;
+      padding: 28px 12px;
+      cursor: pointer;
+    }
+    .upload strong { display: block; font-size: 17px; }
+    .upload small { display: block; color: #657187; margin-top: 6px; }
+    input[type=file] { display: block; width: 100%; margin-top: 15px; }
+    button, .download {
+      display: block;
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      padding: 13px 18px;
+      margin-top: 17px;
+      background: #176bdf;
+      color: white;
+      font-size: 15px;
+      font-weight: 750;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    button:hover, .download:hover { background: #1155b5; }
+    .hint { font-size: 12px; color: #657187; text-align: center; margin: 12px 0 0; }
+    .error {
+      border: 1px solid #fecaca;
+      background: #fff1f2;
+      color: #9f1239;
+      padding: 13px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      overflow-wrap: anywhere;
+    }
+    .success {
+      background: #ecfdf5;
+      color: #166534;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .stat {
+      padding: 15px;
+      background: #f8fafc;
+      border: 1px solid #e5eaf2;
+      border-radius: 12px;
+      min-width: 0;
+    }
+    .stat span { display: block; color: #657187; font-size: 12px; }
+    .stat strong { font-size: 25px; overflow-wrap: anywhere; }
+    .features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .feature { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
+    .feature b { display: block; margin-bottom: 5px; }
+    .feature p { margin: 0; color: #657187; font-size: 13px; }
+    footer { padding: 15px 16px 28px; text-align: center; color: #657187; font-size: 12px; }
+    @media (max-width: 560px) {
+      main { padding-top: 28px; }
+      .features { grid-template-columns: 1fr; }
+      .tag { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">Data<span>Clean</span></div>
+      <div class="tag">CSV & Excel Cleaning Tool</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="pill">SIMPLE · FAST · USEFUL</span>
+      <h1>Clean your data.<br>Keep what matters.</h1>
+      <p>Remove blank rows, eliminate duplicate records, and get a clean file in seconds.</p>
+    </section>
+
+    <section class="panel">
+      {% if error %}
+        <div class="error" role="alert">{{ error }}</div>
+      {% endif %}
+
+      <h2>Upload your file</h2>
+      <p style="color:#657187">Choose a CSV or Excel spreadsheet to get started.</p>
+
+      <form method="post" enctype="multipart/form-data">
+        <label class="upload" for="file">
+          <strong>Choose a file to clean</strong>
+          <small>Supported formats: .csv and .xlsx · Maximum size: 10 MB</small>
+          <input id="file" type="file" name="file" accept=".csv,.xlsx" required>
+        </label>
+        <button type="submit">Clean my data →</button>
+      </form>
+      <p class="hint">Use a backup of important data before cleaning.</p>
+    </section>
+
+    {% if result %}
+    <section class="panel" aria-live="polite">
+      <div class="success">✓ Cleaning completed successfully</div>
+      <h2>Cleaning report</h2>
+      <p><b>Input file:</b> {{ result.original_name }}</p>
+      <div class="stats">
+        <div class="stat"><span>Rows checked</span><strong>{{ result.total }}</strong></div>
+        <div class="stat"><span>Rows kept</span><strong>{{ result.kept }}</strong></div>
+        <div class="stat"><span>Blank rows removed</span><strong>{{ result.blank }}</strong></div>
+        <div class="stat"><span>Duplicate rows removed</span><strong>{{ result.duplicates }}</strong></div>
+        <div class="stat"><span>Total rows removed</span><strong>{{ result.removed }}</strong></div>
+        <div class="stat"><span>Removal rate</span><strong>{{ "%.2f"|format(result.rate) }}%</strong></div>
+      </div>
+      <a class="download" href="{{ url_for('download_file', filename=result.output_name) }}">Download cleaned file ↓</a>
+    </section>
+    {% endif %}
+
+    <section class="features">
+      <div class="feature"><b>01 · Remove blanks</b><p>Find and remove completely empty data rows.</p></div>
+      <div class="feature"><b>02 · Remove duplicates</b><p>Keep one copy of each matching cleaned record.</p></div>
+      <div class="feature"><b>03 · Get a report</b><p>Review row counts and download the cleaned file.</p></div>
+    </section>
+  </main>
+
+  <footer>DataClean · Python CSV & Excel Cleaner · Local demo</footer>
+</body>
+</html>
