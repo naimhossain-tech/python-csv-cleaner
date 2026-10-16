@@ -96,13 +96,24 @@ def main():
             writer.writeheader()
             writer.writerows(rows)
 
-        print("\nCSV Cleaning Report")
-        print("-------------------")
-        print(f"Rows read:             {total}")
+        removed = blank_removed + duplicate_removed
+        kept = len(rows)
+        removal_rate = (removed / total * 100) if total else 0.0
+
+        print("\n" + "=" * 36)
+        print("         CSV CLEANING REPORT")
+        print("=" * 36)
+        print("Status:                SUCCESS")
+        print(f"Input file:            {source}")
+        print(f"Output file:           {output}")
+        print("-" * 36)
+        print(f"Total rows checked:    {total}")
         print(f"Blank rows removed:    {blank_removed}")
         print(f"Duplicate rows removed:{duplicate_removed:>5}")
-        print(f"Rows kept:             {len(rows)}")
-        print(f"Output saved to:       {output}")
+        print(f"Total rows removed:    {removed}")
+        print(f"Rows kept:             {kept}")
+        print(f"Removal rate:          {removal_rate:.2f}%")
+        print("=" * 36)
         return 0
 
     except (OSError, UnicodeError, csv.Error) as error:
