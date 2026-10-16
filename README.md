@@ -18,26 +18,26 @@ A simple Python command-line tool for cleaning CSV files.
 
 ## Usage
 
-```bash
-python clean_csv.py input.csv
-```
+Clean a CSV file:
 
-```bash
-python clean_csv.py input.csv -o output.csv
-```
+    python clean_csv.py input.csv
 
-```bash
-python clean_csv.py --help
-```
+Choose an output file:
+
+    python clean_csv.py input.csv -o output.csv
+
+View help:
+
+    python clean_csv.py --help
 
 ## Demo Results
 
-```text
-Rows read: 5
-Blank rows removed: 1
-Duplicate rows removed: 1
-Rows kept: 3
-```
+Example report:
+
+    Rows read: 5
+    Blank rows removed: 1
+    Duplicate rows removed: 1
+    Rows kept: 3
 
 ## How It Works
 
