@@ -19,15 +19,15 @@ Requirements
 
 Usage
 
-Clean a CSV file:
+Clean a CSV file
 
 python clean_csv.py input.csv
 
-Save the cleaned file to a specific location:
+Save the cleaned file to a specific location
 
 python clean_csv.py input.csv -o output.csv
 
-View available options:
+View available options
 
 python clean_csv.py --help
 
@@ -41,11 +41,11 @@ Cleaning Report
 
 CSV Cleaning Report
 -------------------
-Rows read:             5
-Blank rows removed:    1
+Rows read:              5
+Blank rows removed:     1
 Duplicate rows removed: 1
 Rows kept:              3
-Output saved to:       portfolio_demo_cleaned.csv
+Output saved to:        portfolio_demo_cleaned.csv
 
 Cleaned Output
 
