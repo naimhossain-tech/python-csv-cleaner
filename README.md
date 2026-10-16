@@ -1,74 +1,125 @@
-# Python CSV Cleaner
+# Python CSV & Excel Cleaner
 
-A lightweight command-line tool for cleaning CSV files using Python built-in libraries.
+A lightweight Python command-line tool to clean CSV and Excel files by trimming whitespace, removing blank rows, and eliminating duplicate records. Supports single-file and batch processing.
 
 ## Features
 
-- Trims leading and trailing whitespace from headers and values
+- Supports CSV (`.csv`) and Excel (`.xlsx`) files
+- Trims leading and trailing whitespace
 - Removes completely blank rows
 - Removes duplicate records
-- Displays a cleaning summary
-- Supports custom output file paths
-- Requires no third-party Python packages
+- Validates column headers and rejects duplicate header names
+- Generates a cleaning summary for each file
+- Supports custom output paths
+- Processes multiple CSV and Excel files in one command
+- Includes automated unit tests
 
 ## Requirements
 
-- Python 3.8 or newer
-- A terminal or command prompt
+- Python 3
+- `openpyxl` for Excel file support
 
-## Getting Started
+## Installation
 
-Clone the repository and enter the project directory:
+Clone the repository:
 
-    git clone https://github.com/naimhossain-tech/python-csv-cleaner.git
-    cd python-csv-cleaner
+```bash
+git clone https://github.com/naimhossain-tech/python-csv-cleaner.git
+cd python-csv-cleaner
+```
+
+Install the required dependency:
+
+```bash
+python -m pip install openpyxl
+```
 
 ## Usage
 
-Clean a CSV file using the default output filename:
+### Clean a CSV file
 
-    python clean_csv.py input.csv
+```bash
+python clean_csv.py input.csv
+```
 
-Specify an output filename:
+By default, the output is saved as `cleaned_output.csv`.
 
-    python clean_csv.py input.csv -o output.csv
+Specify an output file:
 
-Display command-line help:
+```bash
+python clean_csv.py input.csv -o cleaned.csv
+```
 
-    python clean_csv.py --help
+### Clean an Excel file
 
-## Example
+```bash
+python clean_csv.py input.xlsx
+```
 
-Suppose the input CSV contains blank rows and duplicate records. Run:
+Specify an output file:
 
-    python clean_csv.py input.csv -o cleaned.csv
+```bash
+python clean_csv.py input.xlsx -o cleaned.xlsx
+```
 
-Example cleaning report:
+### Batch processing
 
-    CSV Cleaning Report
-    Rows read: 5
-    Blank rows removed: 1
-    Duplicate rows removed: 1
-    Rows kept: 3
-    Output saved to: cleaned.csv
+Place your CSV and XLSX files in a folder, then run:
 
-The report above is an example. Actual counts depend on the input file.
+```bash
+python batch_clean.py batch_demo
+```
 
-## How It Works
+By default, cleaned files are saved in `batch_cleaned_output/` with the prefix `cleaned_`.
 
-1. Reads the input CSV file.
-2. Cleans whitespace from headers and values.
-3. Removes completely blank rows.
-4. Removes duplicate records.
-5. Writes the cleaned data to the output file.
-6. Reports the cleaning results.
+Choose a custom output directory:
 
-## Safety Notes
+```bash
+python batch_clean.py batch_demo -o results
+```
 
-- Keep a backup of important source files.
-- Review cleaned data before using it in production.
-- Do not assume that duplicate rows always represent invalid data.
+Batch processing checks files directly inside the specified folder, not its subfolders.
 
-## License
+### View help
 
-No formal open-source license has been added yet. Contact the repository owner for licensing and reuse permission.
+```bash
+python clean_csv.py --help
+python batch_clean.py --help
+```
+
+## Example report
+
+```text
+FILE CLEANING REPORT
+Status: SUCCESS
+Total rows checked:    4
+Blank rows removed:    1
+Duplicate rows removed: 1
+Total rows removed:    2
+Rows kept:             2
+Removal rate:          50.00%
+```
+
+The example is illustrative. Actual results depend on the input data.
+
+## Run tests
+
+Run the automated tests with:
+
+```bash
+python -m py_compile clean_csv.py batch_clean.py
+python -m unittest -v test_clean_csv
+```
+
+## Important notes
+
+- Always keep a backup of important source data.
+- Review cleaned output before using it in production.
+- Duplicate records are identified by comparing their cleaned cell values.
+- CSV and Excel files are processed using the first worksheet or active worksheet, respectively, for Excel input.
+- The cleaner is intended for data cleanup, not for verifying the accuracy of the data.
+- No formal open-source license has been added. Contact the repository owner for licensing and reuse permission.
+
+## Repository
+
+https://github.com/naimhossain-tech/python-csv-cleaner
