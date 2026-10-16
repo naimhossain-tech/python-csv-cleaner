@@ -1,17 +1,15 @@
 # Python CSV Cleaner
 
-A lightweight Python tool to clean CSV files by trimming whitespace,
-removing blank rows, and removing duplicate records.
+A simple Python command-line tool for cleaning CSV files.
 
 ## Features
 
-- Trims whitespace from column names and cell values
+- Trims whitespace from headers and values
 - Removes completely blank rows
 - Removes duplicate records
-- Reports rows processed, removed, and kept
+- Reports cleaning results
 - Supports custom output paths
-- Handles common file and CSV errors
-- Uses Python's built-in libraries
+- Uses Python built-in libraries
 
 ## Requirements
 
@@ -20,31 +18,39 @@ removing blank rows, and removing duplicate records.
 
 ## Usage
 
-Clean a CSV file:
-
 ```bash
 python clean_csv.py input.csv
-python clean_csv.py input.csv -o output/cleaned.csv
-python clean_csv.py --help
-CSV Cleaning Report
--------------------
-Rows read:             4
-Blank rows removed:    1
-Duplicate rows removed:    1
-Rows kept:             2
-Output saved to:       demo_cleaned.csv
-
-## ধাপ ২: ব্যক্তিগত ও অপ্রয়োজনীয় ফাইল সুরক্ষিত রাখুন
-
-একটি `.gitignore` তৈরি করুন:
+```
 
 ```bash
-cat > .gitignore <<'EOF'
-.venv/
-__pycache__/
-*.pyc
-*.backup
-input.csv
-cleaned_output.csv
-demo.csv
-demo_cleaned.csv
+python clean_csv.py input.csv -o output.csv
+```
+
+```bash
+python clean_csv.py --help
+```
+
+## Demo Results
+
+```text
+Rows read: 5
+Blank rows removed: 1
+Duplicate rows removed: 1
+Rows kept: 3
+```
+
+## How It Works
+
+1. Reads the input CSV file.
+2. Trims unnecessary whitespace.
+3. Removes blank rows.
+4. Removes duplicate records.
+5. Saves the cleaned output.
+
+## Safety
+
+Keep a backup of your original file and review the output before using it.
+
+## License
+
+Available for learning and practical CSV-cleaning tasks.
