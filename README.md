@@ -48,3 +48,35 @@ input.csv
 cleaned_output.csv
 demo.csv
 demo_cleaned.csv
+## Demo: Before and After
+
+This example demonstrates how the CSV Cleaner removes extra whitespace, blank rows, and duplicate records.
+
+### Sample Command
+
+```bash
+python clean_csv.py portfolio_demo.csv -o portfolio_demo_cleaned.csv
+```
+
+### Cleaning Results
+
+- Rows read: 5
+- Blank rows removed: 1
+- Duplicate rows removed: 1
+- Rows kept: 3
+
+### Cleaned Output
+
+```csv
+name,email,city
+Rahim,rahim@example.com,Dhaka
+Karim,karim@example.com,Chattogram
+Nusrat,nusrat@example.com,Sylhet
+```
+
+### Features Demonstrated
+
+- Trims whitespace from values
+- Removes completely blank rows
+- Removes duplicate records
+- Saves cleaned data to a separate CSV file
