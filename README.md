@@ -170,3 +170,11 @@ Start command:
     gunicorn --bind 0.0.0.0:$PORT app:app
 
 Generated files are stored in `web_output/` and are not automatically expired. Configure suitable cleanup before running a long-lived public deployment.
+
+## Need CSV or Excel Data Cleaning?
+
+Need help cleaning, formatting, or organizing CSV and Excel files? I offer Python-based data cleaning services, including duplicate removal, blank-row removal, and file processing.
+
+**[Order CSV & Excel Data Cleaning on Fiverr](https://www.fiverr.com/naimhossain007/clean-and-format-your-csv-and-excel-data-using-python)**
+
+Explore the project source code and examples in this repository before ordering.
