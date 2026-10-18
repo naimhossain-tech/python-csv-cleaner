@@ -8,7 +8,7 @@ import openpyxl
 from flask import Flask, render_template, request, send_from_directory, abort
 from werkzeug.utils import secure_filename
 
-from clean_csv import clean_csv, clean_excel
+from clean_csv import clean_csv, clean_excel, count_empty_cells
 
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_DIR = BASE_DIR / "uploads"
@@ -83,6 +83,7 @@ def index():
                         "removed": removed,
                         "kept": len(rows),
                         "rate": (removed / total * 100) if total else 0,
+                        "empty_by_column": count_empty_cells(headers, rows),
                     }
 
                 except (

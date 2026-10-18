@@ -105,6 +105,59 @@
     }
     .stat span { display: block; color: #657187; font-size: 12px; }
     .stat strong { font-size: 25px; overflow-wrap: anywhere; }
+    /* Empty cells report */
+    .empty-columns {
+      margin-top: 24px;
+      padding: 18px;
+      border: 1px solid #dce6f2;
+      border-radius: 16px;
+      background: #f8fbff;
+    }
+    .empty-columns h3 {
+      margin: 0 0 6px;
+      font-size: 19px;
+      overflow-wrap: anywhere;
+    }
+    .empty-columns .report-note {
+      margin: 0 0 16px;
+      color: #657187;
+      font-size: 13px;
+    }
+    .empty-list {
+      display: grid;
+      gap: 10px;
+    }
+    .empty-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+      padding: 12px 14px;
+      border: 1px solid #e5eaf2;
+      border-radius: 11px;
+      background: #fff;
+    }
+    .empty-name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-weight: 650;
+    }
+    .empty-count {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #075985;
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .empty-count.has-empty {
+      background: #fff1f2;
+      color: #be123c;
+    }
+
     .features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .feature { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
     .feature b { display: block; margin-bottom: 5px; }
@@ -164,6 +217,23 @@
         <div class="stat"><span>Total rows removed</span><strong>{{ result.removed }}</strong></div>
         <div class="stat"><span>Removal rate</span><strong>{{ "%.2f"|format(result.rate) }}%</strong></div>
       </div>
+      <section class="empty-columns" aria-labelledby="empty-columns-title">
+        <h3 id="empty-columns-title">Empty cells by column</h3>
+        <p class="report-note">খালি ঘরের সংখ্যা — পরিষ্কার করার পর রাখা সারিগুলোতে</p>
+        <div class="empty-list">
+          {% for column, count in result.empty_by_column.items() %}
+          <div class="empty-item">
+            <span class="empty-name">{{ column }}</span>
+            <span class="empty-count{% if count > 0 %} has-empty{% endif %}">
+              {{ count }} empty
+            </span>
+          </div>
+          {% else %}
+          <p class="report-note">কোনো কলামের তথ্য পাওয়া যায়নি।</p>
+          {% endfor %}
+        </div>
+      </section>
+
       <a class="download" href="{{ url_for('download_file', filename=result.output_name) }}">Download cleaned file ↓</a>
     </section>
     {% endif %}

@@ -10,6 +10,22 @@ def clean_value(value):
     return value.strip() if isinstance(value, str) else value
 
 
+def count_empty_cells(headers, rows):
+    """Count empty cells in each column without modifying the data."""
+    counts = {header: 0 for header in headers}
+
+    for row in rows:
+        for index, header in enumerate(headers):
+            value = row[index] if index < len(row) else None
+
+            if value is None or (
+                isinstance(value, str) and not value.strip()
+            ):
+                counts[header] += 1
+
+    return counts
+
+
 def validate_headers(raw_headers):
     if not raw_headers or all(value is None or str(value).strip() == "" for value in raw_headers):
         raise ValueError("Header row is missing.")
@@ -164,6 +180,11 @@ def main():
         print(f"Total rows removed:    {removed}")
         print(f"Rows kept:             {kept}")
         print(f"Removal rate:          {removal_rate:.2f}%")
+        print("-" * 36)
+        print("Empty cells by column (kept rows):")
+        empty_counts = count_empty_cells(headers, rows)
+        for header, count in empty_counts.items():
+            print(f"  {header}: {count}")
         print("=" * 36)
         return 0
 
