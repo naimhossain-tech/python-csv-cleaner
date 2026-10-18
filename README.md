@@ -136,3 +136,37 @@ https://github.com/naimhossain-tech/python-csv-cleaner/actions
 ## Repository
 
 https://github.com/naimhossain-tech/python-csv-cleaner
+
+## Web application
+
+This project includes a Flask web interface for cleaning CSV and Excel files.
+
+### Run locally
+
+Install dependencies:
+
+    python -m pip install -r requirements.txt
+
+Start the server:
+
+    python app.py
+
+Open http://127.0.0.1:5000 in your browser.
+
+### Features
+
+- Upload CSV and XLSX files up to 10 MB.
+- Remove blank rows and duplicate records.
+- View a cleaning report and download the cleaned file.
+
+### Production deployment
+
+Install dependencies:
+
+    pip install -r requirements.txt
+
+Start command:
+
+    gunicorn --bind 0.0.0.0:$PORT app:app
+
+Generated files are stored in `web_output/` and are not automatically expired. Configure suitable cleanup before running a long-lived public deployment.
