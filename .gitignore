@@ -18,3 +18,9 @@ batch_cleaned_output/
 # Uploaded files and generated web output
 uploads/
 web_output/
+
+# Local test files and secrets
+/dataclean-test.html
+.env
+.env.*
+!.env.example
